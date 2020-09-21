@@ -1,0 +1,410 @@
+{% extends "layout.html" %}
+
+{% block title %}Add a Project{% endblock %}
+
+{% block main %}
+    <div class="container">
+
+        <h4 class="page-header">Add a Project</h4>
+
+        <form action="/add" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="addimage">Add a Picture:</label>
+                        <input type="file" class="form-control-file" name="addimage" accept="image/*">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" class="form-control" name="projectname" placeholder="Name" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" class="form-control" name="designer" placeholder="Designer" required>
+                        <!--Autocomplete via data list-->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="magazine" onclick="checkboxFunction(document.getElementById('magazine'), document.getElementById('magbox'))">
+                        <label class="form-check-label" for="magazine">
+                            This project came from a magazine.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden" id="magbox">
+                <div class="col">
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" class="form-control" name="whichmag" placeholder="Magazine">
+                    </div>
+                    <!--autocomplete via data list-->
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" class="form-control" name="issue" placeholder="Issue">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="queue" value="queued" id="started" onclick="reversecheckFunction(document.getElementById('started'), document.getElementById('dates'))">
+                        <label class="form-check-label" for="started">This project is queued to start but hasn't been started yet.</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="dates">
+                <div class="col">
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" class="form-control" id="start" name="start" placeholder="Start Date">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="finished" id="finished" name="finished" onclick="checkboxFunction(document.getElementById('finished'), document.getElementById('finbox'))">
+                            <label class="form-check-label" for="finished">
+                                This project is finished.
+                            </label>
+                        </div>
+                        <input type="text" autocomplete="off" class="form-control hidden" id="finbox" name="finish" placeholder="Finish Date">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h4>Dimensions (in stitches)</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <input type="number" autocomplete="off" class="form-control" name="height" min="1" placeholder="Height">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <input type="number" autocomplete="off" class="form-control" name="width" min="1" placeholder="Width">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="kit" id="kit" onchange="reversecheckFunction(document.getElementById('kit'), document.getElementById('nonkit'))">
+                        <label class="form-check-label" for="kit">
+                            This is a complete kit and I don't want to input fabric or thread details.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div id="nonkit">
+                <div class="row">
+                    <div class="col">
+                        <h4>Fabric</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <input autocomplete="off" type="text" class="form-control" name="dyer" placeholder="Dyer">
+                        </div>
+                        <!--datalist -->
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <input autocomplete="off" type="number" class="form-control" name="count" placeholder="Count">
+                        </div>
+                        <!--datalist-->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <input autocomplete="off" type="text" class="form-control" name="colour" placeholder="Colour">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="type" placeholder="Type">
+                        </div>
+                    </div>
+                    <!--datalist - aida, linen, evenweave)-->
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="overtwo">
+                                <label class="form-check-label" for="overtwo">
+                                    Please tick this box if you are stitching this project over two fabric threads so we can correctly calculate the size of your project.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <h4>Threads</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="threads" onclick="checkboxFunction(document.getElementById('threads'), document.getElementById('threadlist'))">
+                            <label class="form-check-label" for="threads">
+                                I wish to input standard cotton threads (DMC, Anchor, etc.)
+                            </label>
+                            <!-- add a text box here to input threads if ticked -->
+                        </div>
+                        <div class="form-group hidden" id=threadlist>
+                            <textarea autocomplete="off" class="form-control" id="threadlistbox" name="threads" rows="3" placeholder="Type your thread numbers in here, separated by commas and with no extra spaces."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="handdye" onclick="checkboxFunction(document.getElementById('handdye'), document.getElementById('handdyebox'))">
+                                <label class="form-check-label" for="handdye">
+                                    I wish to input hand-dyed or specialty threads
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden" id="handdyebox">
+                    <div id="handdyeinner">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="threaddyer0" placeholder="Dyer">
+                                    <!--datalist-->
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <input autocomplete="off" type="text" class="form-control" name="flossnumber0" placeholder="Name/Number">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="threadtype0" placeholder="Type">
+                                    <!--datalist-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-custom" onclick="newThread()">Add Thread</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h4>Priority</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="priority" value="none" checked onclick="priorityFunction('none')">
+                        <label class="form-check-label" for="none">
+                            No priority set
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="priority" value="low" onclick="priorityFunction('low')">
+                        <label class="form-check-label" for="low">
+                            Low priority (This project is for fun, and has no hard deadline.)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="priority" value="medium" onclick="priorityFunction('medium')">
+                        <label class="form-check-label" for="medium">
+                            Medium priority (This project has a hard deadline, but it's far enough away that I'm not focussing on it yet.)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="priority" value="high" onclick="priorityFunction('high')">
+                        <label class="form-check-label" for="high">
+                            High priority (There is a deadline for this project, and I need to focus on it!)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden" id="deadbox">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="deadline">Deadline:</label>
+                        <input type="date" class="form-control" name="deadline" placeholder="DD/MM/YYYY">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h4>Categories</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <div id="catbox">
+                            {% if categories > 0 %}
+
+                                {% for cat in range(categories) %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="catcheck{{cat}}" name="catcheck{{cat}}">
+                                        <label class="form-check-label" for="catcheck{{cat}}">
+                                            {{categories[cat]}}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+
+                            {% else %}
+
+                            <p>You haven't added any Categories yet. Enter a new Category below, and next time you create a project, it'll display here!</p>
+
+                            {% endif %}
+                             <div class="form-group">
+                                <input autocomplete="off" class="form-control" type="text" name="newcat0" placeholder="New Category">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-custom" type="button" onclick="newCat()">+ Add another </button>
+                    </div>
+                </div>
+            </div>
+
+
+                    <!--Put in some jinja code that will iterate over all current tags in checkbox form-->
+                    <!--Add in another checkbox for "other" which will allow the user to enter 1+ tags-->
+                    <!--Store tags in a seperate SQL table - think of the genres table-->
+                    <!--Render events in this section too-->
+                    <!--If no categories, offer option to add by typing-->
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="events" onclick="checkboxFunction(document.getElementById('events'), document.getElementById('eventbox'))">
+                        <label class="form-check-label" for="events">
+                            This project is part of one or more events
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden" id="eventbox">
+                <div class="col">
+                    <div id="eventboxinner">
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="event0" placeholder="Event">
+                            <!--datalist-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-custom" type="button" onclick="addEvent()">+ Add another </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="notes">Notes:</label>
+                        <textarea autocomplete="off" class="form-control" name="notes" rows="3" maxlength="1000" placeholder="This is a good place to note thread substitutions you've made, or errors in the chart you need to be aware of."></textarea>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-custom" type="submit">Add Project</button>
+        </form>
+    </div>
+    <script>
+        // Function to show sections when checkboxes are ticked
+        function checkboxFunction(checkbox, shown) {
+
+            if (checkbox.checked == true){
+                shown.style.display = "initial";
+            } else {
+                shown.style.display = "none";
+            }
+        }
+
+        // Reverse checkbox function to hide thread/fabric
+        function reversecheckFunction(checkbox, hide) {
+
+            if (checkbox.checked == true) {
+                hide.style.display = "none";
+            } else {
+                hide.style.display = "initial";
+            }
+
+        }
+
+        // Add event handler to priority radios
+        function priorityFunction(priority) {
+
+            if (priority == 'medium' || priority == 'high') {
+                    document.getElementById('deadbox').style.display = "initial";
+            } else {
+                document.getElementById('deadbox').style.display = "none";
+            }
+        }
+
+        var eventcounter = 1;
+        var limit = 10;
+        function addEvent() {
+            if (eventcounter <= limit) {
+                var newdiv = document.createElement('div');
+                newdiv.classList.add("form-group");
+                newdiv.innerHTML = "<input class='form-control' type='text' name='event" + eventcounter + "' placeholder='Event'>";
+                document.getElementById("eventboxinner").appendChild(newdiv);
+                eventcounter++;
+             } else {
+                 alert("You may only add 10 events to a Project.")
+             }
+        }
+
+        var catcounter = 1;
+        function newCat() {
+            if (catcounter <= limit) {
+                var newdiv = document.createElement('div');
+                newdiv.classList.add("form-group");
+                newdiv.innerHTML = "<input class='form-control' type='text' name='newcat" + catcounter + "' placeholder='New Category'>";
+                document.getElementById("catbox").appendChild(newdiv);
+                catcounter++
+            } else {
+                alert("You may only add 10 new categories at a time. If you wish to add more, edit this Project later.")
+            }
+        }
+
+        var threadlimit = 25;
+        var threadcounter = 1;
+        function newThread() {
+            if (threadcounter <= threadlimit) {
+                var newdiv = document.createElement('div');
+                newdiv.classList.add("row");
+                newdiv.innerHTML =  "<div class='row'><div class='col'><div class='form-group'><input type='text' class='form-control' name='threaddyer" + threadcounter + "' placeholder='Dyer'></div></div><div class='col'><div class='form-group'><input type='text' class='form-control' name='flossnumber" + threadcounter + "' placeholder='Name/Number'></div></div><div class='col'><div class='form-group'><input type='text' class='form-control' name='threadtype" + threadcounter + "' placeholder='Type'></div></div></div>";
+                document.getElementById("handdyeinner").appendChild(newdiv);
+                threadcounter++
+            } else {
+                alert("You may only add 25 hand-dyed threads to a project. If you wish to add more, consider adding them to the 'Notes' section.")
+            }
+        }
+    </script>
+
+{% endblock %}
+
+<!-- also don't forget to write code to generate categories! -->
+<!-- change some of these into datalists-->
+<!-- once inventory is coded, add an option to add items -->
+<!-- add form validation to some boxes -->
+<!-- in order to fix misbehaving hidden columns, check out col-[n] classes on bootstrap grid page -->
+<!-- change JS so add field doesn't work if the last field hasn't got content in it -->

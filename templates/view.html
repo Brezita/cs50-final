@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}{{project['name']}}{% endblock %}
+
+{% block main %}
+
+    <div class="container left-container">
+        <h4 class="page-header" style="text-align:center">{{project['name']}}</h4>
+        <img class="display" style="display:block; margin:auto" src="{% if project['image'] is not none %}/static/uploads/{{project['image']}}{% else %}/static/noimg.jpg{% endif %}">
+        <div class="text-box">
+            <p>{{project['name']}} ({{project['designer']}})<br>
+            {% if project['start']|length %} Started {{project['start']}}<br>{% endif %}
+            {% if project['finish']|length %} Finished {{project['finish']}}<br>{% endif %}
+            {% if project['height'] %}{{project ['height']}} stitches x {{project['width']}} stitches<br>
+            ({{project['size']}})<br>{% endif %}
+            {% if project['magazine']|length %}{{project['magazine']}} {{project['issue']}}<br>{% endif %}
+            {% if project['count'] %}Stitched on {{project['count']}} count {{project['type']}} in "{{project['colour']}}" by {{project['dyer']}}<br>{% endif %}
+
+            {% if thread|length %}<br>Threads: {% for threads in thread %}{{thread[threads]}}, {% endfor %}.<br>{% endif %}
+            
+            {% if handdye['nameno']|length %}<br>Hand-dyed threads used:<br>
+                {% for thread in handdye %}{{project[thread]['nameno']}} by {{project[thread]['dyer']}} ({{project[thread]['type']}})<br>{% endfor %}<br>
+            {% endif %}<br>
+
+            Priority: {{project['priority']}}<br>
+            {% if project['deadline']|length %}Deadline: {{project['deadline']}}{% endif %}<br>
+
+            Tags:<br>
+            {% if tags|length %}
+                <div id="tag-container">
+                    {% for tag in tags %}
+                    <div class="tag">{{tags[tag]}}</div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                You haven't tagged this project yet!
+            {% endif %}
+            </p>
+        </div>
+        <!-- - categories/events as tags
+        - list of updates and notes
+        - update button; edit button; delete button -->
+        <div id="button-rig" style="text-align:center">
+            <form class="formbtn" method="POST" action="/update"><input type="hidden" name="id" value="{{project['id']}}"><button class="btn btn-custom" type="submit">Update Project</button></form>
+            <a href="/delete" class="btn btn-custom">Delete Project</a>
+        </div>
+    </div>
+
+    <div class="right-container">
+        
+    </div>
+
+{% endblock %}
+
+<!--form should have options to:
+- "I wish to input the threads I used" - if yes, redirect to list of threads from type selected -  import DMC, Anchor, Sullivan and Madeira libraries - allow selection of multiple types
+- Checkbox option for "I wish to input hand-dyed threads" - approach floss dyers about importing their complete libaries - redirect to threads.html with text box to input list of threads
+- Add JavaScript to page to allow user to update project by adding further photos or notes
+- Past notes and photos displayed at bottom of page -->
+<!--add bootstrap progress bar-->
+<!--render project updates on this page-->

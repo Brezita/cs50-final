@@ -1,0 +1,26 @@
+- create mobile CSS
+- compare application.py with the C$50 Finance page to see what needs to be added
+- adjust navbar so "Profile" is instead the username and aligns to the right
+- make it so login is required for all pages - and change menu bar to include "if" clause!
+- write error message function
+- fix sidebar stickiness on scroll!
+- add the ability to add fabric or speciality threads from inventory
+- REMOVE DMC/STANDARD ITEMS FROM INVENTORY
+- check format of table after checking/unchecking boxes
+- fix application.py issue with adding categories into database
+- fix floating footer issue
+
+
+SOME SITES TO LOOK AT:
+https://pythonise.com/series/learning-flask/python-before-after-request
+
+https://techmonger.github.io/4/secure-passwords-werkzeug/ << password security
+
+SQL integration:
+https://docs.sqlalchemy.org/en/13/index.html
+https://flask-sqlalchemy.palletsprojects.com/en/2.x/
+https://medium.com/dev-genius/how-to-integrate-sql-server-with-python-and-using-sql-script-in-python-a20bcbea6def
+https://www.janbasktraining.com/blog/use-sql-with-python/
+
+Fix the sidebar in place:
+https://css-tricks.com/scrollfollow-sidebar/

@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}Projects{% endblock %}
+
+{% block main %}
+
+    <h4 class="page-header">View {{status}} Projects</h4>
+
+    {% if projectno > 0 %}
+
+        <div class="flex-container">
+
+        {% for project in range(projectno) %}
+
+            <figure class="item-container">
+                <a href="#" title="">
+                    <form method="post" action="/view">
+                        <input type="hidden" name="id" value="{{projects[project]['id']}}">
+                        <button class="polaroid" type="submit">
+                            <img height="250" src="{% if projects[project]['image'] is not none %}/static/uploads/{{projects[project]['image']}}{% else %}/static/noimg.jpg{% endif %}">
+                        </button>
+                    </form>
+                </a>
+                <figcaption>"{{projects[project]['name']}}"<br>{{projects[project]['designer']}}</figcaption>
+            </figure>
+
+
+        {% endfor %}
+
+        </div>
+
+    {% else %}
+        {% if status == "all" or status == "Current" %}
+
+            <h2 class="empty">You haven't started any projects yet! <a href="/add">Would you like to add one to get started?</a></h2>
+
+        {% elif status == "Finished" or status == "Queued" %}
+
+            <h2 class="empty">You haven't {{status}} any projects!</h2>
+        
+        {% endif %}
+    {% endif %}
+
+{% endblock %}
+
+
+
+<!--Display all user projects. Move the sidebar from layout to here which will allow users to sort their projects or display certain projects with JavaScript -->

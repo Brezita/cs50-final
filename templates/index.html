@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block main %}
+
+    <!--add a bootstrap alert if redirected from the add project page-->
+
+    {% if projectno > 0 %}
+
+    <h4 class="page-header">Latest Updates</h4>
+
+        <div class="flex-container">
+
+            {% for project in range(projectno) %}
+
+                <figure>
+                    <a href="#" title="">
+                        <form method="post" action="/view">
+                            <input type="hidden" name="id" value="{{projects[project]['id']}}">
+                            <button class="polaroid" type="submit">
+                                <img height="250" src="{% if projects[project]['image'] is not none %}/static/uploads/{{projects[project]['image']}}{% else %}/static/noimg.jpg{% endif %}">
+                            </button>
+                        </form>
+                    </a>
+                    <figcaption>"{{projects[project]['name']}}"<br>{{projects[project]['timestamp']}}</figcaption>
+                </figure>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+    <h4 class="page-header">Welcome to StitchBook50!</h4>
+
+    <p class="empty">When you've added some projects, they'll appear here. <a href="/add">Click here to get started!</a></p>
+
+    {% endif %}
+
+{% endblock %}
+
+<!--remove sidebar and move to project pages-->

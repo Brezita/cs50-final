@@ -1,0 +1,309 @@
+{% extends "layout.html" %}
+
+{% block title %}Edit {{project['name']}}{% endblock %}
+
+{% block main %}
+
+    <div class="container">
+
+        <h4 class="page-header">Edit {{project['name']}}</h4>
+
+        <form id="editform" action="/editproject" method="POST">
+            <input type="hidden" value="{{project['id']}}" name="id">
+                <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" class="form-control" value="{{project['name']}}" name="name" placeholder="Name" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" class="form-control" value="{{project['designer']}}" name="designer" placeholder="Designer" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="magazine" onclick="checkboxFunction(document.getElementById('magazine'), document.getElementById('magbox'))" {% if project['magazine']|length or project['issue']|length %}checked{% endif %}>
+                        <label class="form-check-label" for="magazine">
+                            This project came from a magazine.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden" id="magbox">
+                <div class="col">
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" class="form-control" value="project['magazine']" name="magazine" placeholder="Magazine">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" class="form-control" value="project['issue']" name="issue" placeholder="Issue">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="queue" value="queued" id="started" onclick="reversecheckFunction(document.getElementById('started'), document.getElementById('dates'))" {% if project['status'] == "Queued" %}checked{% endif %}>
+                        <label class="form-check-label" for="started">This project is queued to start but hasn't been started yet.</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="dates">
+                <div class="col">
+                    <div class="form-group">
+                        <input type="text" autocomplete="off" {% if project['status'] == "Started" %}value="{{project['startdate']}}"{% endif %} class="form-control" id="start" name="startdate" placeholder="Start Date">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="finished" id="finished" name="finished" onclick="checkboxFunction(document.getElementById('finished'), document.getElementById('finbox'))" {% if project['status'] == "Finished" %}checked{% endif %}>
+                            <label class="form-check-label" for="finished">
+                                This project is finished.
+                            </label>
+                        </div>
+                        <input type="text" autocomplete="off" {% if project['status'] == "Finished" %}value="{{project['finishdate']}}"{% endif %} class="form-control hidden" id="finbox" name="finishdate" placeholder="Finish Date">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h4>Dimensions (in stitches)</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <input type="number" autocomplete="off" class="form-control" value="{{project['height']}}" name="height" min="1" placeholder="Height">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <input type="number" autocomplete="off" class="form-control" value="{{project['width']}}" name="width" min="1" placeholder="Width">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="kit" id="kit" onchange="reversecheckFunction(document.getElementById('kit'), document.getElementById('nonkit'))">
+                        <label class="form-check-label" for="kit">
+                            This is a complete kit and I don't want to input fabric or thread details.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div id="nonkit">
+                <div class="row">
+                    <div class="col">
+                        <h4>Fabric</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <input autocomplete="off" type="text" {% if fabric['dyer']|length %}value="{{fabric['dyer']}}"{% endif %} class="form-control" name="dyer" placeholder="Dyer">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <input autocomplete="off" type="number" {% if fabric['count'] is defined %}value="{{fabric['count']}}"{% endif %} class="form-control" name="count" placeholder="Count">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <input autocomplete="off" type="text" {% if fabric['colour']|length %}value="{{fabric['colour']}}"{% endif %} class="form-control" name="colour" placeholder="Colour">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <input type="text" class="form-control" {% if fabric['type']|length %}value="{{fabric['type']}}"{% endif %} name="type" placeholder="Type">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="overtwo" {% if fabric['overtwo'] is true %}checked{% endif %}>
+                                <label class="form-check-label" for="overtwo">
+                                    Please tick this box if you are stitching this project over two fabric threads so we can correctly calculate the size of your project.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <h4>Threads</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="threads" onclick="checkboxFunction(document.getElementById('threads'), document.getElementById('threadlist'))" {% if thread|length %}checked{% endif %}>
+                            <label class="form-check-label" for="threads">
+                                I wish to input standard cotton threads (DMC, Anchor, etc.)
+                            </label>
+                            <!-- add a text box here to input threads if ticked -->
+                        </div>
+                        <div class="form-group {% if thread|length %}hidden{% endif %}" id=threadlist>
+                            <textarea autocomplete="off" class="form-control" id="threadlistbox" name="threads" rows="3" placeholder="Type your thread numbers in here, separated by commas and with no extra spaces."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="handdye" onclick="checkboxFunction(document.getElementById('handdye'), document.getElementById('handdyebox'))">
+                                <label class="form-check-label" for="handdye">
+                                    I wish to input hand-dyed or specialty threads
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden" id="handdyebox">
+                    <div id="handdyeinner">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="threaddyer0" placeholder="Dyer">
+                                    <!--datalist-->
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <input autocomplete="off" type="text" class="form-control" name="flossnumber0" placeholder="Name/Number">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="threadtype0" placeholder="Type">
+                                    <!--datalist-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-custom" onclick="newThread()">Add Thread</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h4>Priority</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="priority" value="none" {% if project['priority'] == "none" %}checked{% endif %} onclick="priorityFunction('none')">
+                        <label class="form-check-label" for="none">
+                            No priority set
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="priority" value="low" {% if project['priority'] == "low" %}checked{% endif %} onclick="priorityFunction('low')">
+                        <label class="form-check-label" for="low">
+                            Low priority (This project is for fun, and has no hard deadline.)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="priority" value="medium" {% if project['priority'] == "medium" %}checked{% endif %} onclick="priorityFunction('medium')">
+                        <label class="form-check-label" for="medium">
+                            Medium priority (This project has a hard deadline, but it's far enough away that I'm not focussing on it yet.)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="priority" value="high" {% if project['priority'] == "high" %}checked{% endif %} onclick="priorityFunction('high')">
+                        <label class="form-check-label" for="high">
+                            High priority (There is a deadline for this project, and I need to focus on it!)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row {% if project['priority'] == 'none' or 'low' %}hidden{% endif %}" id="deadbox">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="deadline">Deadline:</label>
+                        <input type="date" class="form-control" name="deadline" placeholder="DD/MM/YYYY" {% if project['deadline']|length %}value="{{project['deadline']}}"{% endif %}>
+                    </div>
+                </div>
+            </div>
+            <input type="text" value="" name="datapasser" id="datapasser">
+            <button class="btn btn-custom" type="submit">Finish Editing Project</button>
+        </form>
+        <!-- <a class="btn btn-custom" href="#"><form></form></a> -->
+
+        <script>
+            // Function to show sections when checkboxes are ticked
+            function checkboxFunction(checkbox, shown) {
+
+                if (checkbox.checked == true){
+                    shown.style.display = "initial";
+                } else {
+                    shown.style.display = "none";
+                }
+            }
+
+            // Reverse checkbox function to hide thread/fabric
+            function reversecheckFunction(checkbox, hide) {
+
+                if (checkbox.checked == true) {
+                    hide.style.display = "none";
+                } else {
+                    hide.style.display = "initial";
+                }
+
+            }
+
+            // Add event handler to priority radios
+            function priorityFunction(priority) {
+
+                if (priority == 'medium' || priority == 'high') {
+                        document.getElementById('deadbox').style.display = "initial";
+                } else {
+                    document.getElementById('deadbox').style.display = "none";
+                }
+            }
+
+            var threadlimit = 25;
+            var threadcounter = 1;
+            function newThread() {
+                if (threadcounter <= threadlimit) {
+                    var newdiv = document.createElement('div');
+                    newdiv.classList.add("row");
+                    newdiv.innerHTML =  "<div class='row'><div class='col'><div class='form-group'><input type='text' class='form-control' name='threaddyer" + threadcounter + "' placeholder='Dyer'></div></div><div class='col'><div class='form-group'><input type='text' class='form-control' name='flossnumber" + threadcounter + "' placeholder='Name/Number'></div></div><div class='col'><div class='form-group'><input type='text' class='form-control' name='threadtype" + threadcounter + "' placeholder='Type'></div></div></div>";
+                    document.getElementById("handdyeinner").appendChild(newdiv);
+                    threadcounter++
+                } else {
+                    alert("You may only add 25 hand-dyed threads to a project. If you wish to add more, consider adding them to the 'Notes' section.")
+                }
+            }
+            
+            // Detect changes in form and pass to hidden input field to pass to server
+            const updates = []
+            document.getElementById('editform').addEventListener('change', function(event){
+                var elem = event.target;
+                updates.push(elem.name);
+                document.getElementById('datapasser').value = updates;
+            })
+        </script>
+
+    </div>
+
+{% endblock %}
+
+<!--Identical to the add project page but without the option to change the photo (which must be done as an update. Allows the user to correct any mistakes. All previous entries
+into text fields/into checkboxes are displayed as placeholders-->
+
+<!-- wrt status: have show Started and Finished boxes depending on what the status is
+Prefill all other fields with what's already in the db -->

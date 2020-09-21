@@ -1,0 +1,162 @@
+{% extends "layout.html" %}
+
+{% block title %}Update {{project['name']}}{% endblock %}
+
+{% block main %}
+    <div class="container">
+
+        <h4 class="page-header">Update {{project}}</h4>
+
+        <form action="/updatedb" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="addimage">Add a Picture:</label>
+                        <input type="file" class="form-control-file" name="addimage" accept="image/*">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="queued" {% if project['status'] == "Queued" %}checked{% endif %}>
+                        <label class="form-check-label" for="queued">Queued</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="started"{% if project['status'] == "Started" %}checked{% endif %}>
+                        <label class="form-check-label" for="started">In Progress</label>
+                    </div> 
+                </div>
+                <div class="col">
+                    <div class="form-check">  
+                        <input class="form-check-input" type="radio" name="status" value="finished"{% if project['status'] == "Finished" %}checked{% endif %}>
+                        <label class="form-check-label" for="finished">Finished</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h4>Categories</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <div id="catbox">
+                            {% if categories|length %}
+
+                                {% for cat in range(categories) %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="catcheck{{cat}}" name="catcheck{{cat}}">
+                                        <label class="form-check-label" for="catcheck{{cat}}">
+                                            {{categories[cat]}}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+
+                            {% else %}
+
+                            <p>You haven't added any Categories yet. Enter a new Category below, and next time you create a project, it'll display here!</p>
+
+                            {% endif %}
+                            <div class="form-group">
+                                <input autocomplete="off" class="form-control" type="text" name="newcat0" placeholder="New Category">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-custom" type="button" onclick="newCat()">+ Add another </button>
+                    </div>
+                </div>
+            </div>
+
+
+                    <!--Put in some jinja code that will iterate over all current tags in checkbox form-->
+                    <!--Add in another checkbox for "other" which will allow the user to enter 1+ tags-->
+                    <!--Store tags in a seperate SQL table - think of the genres table-->
+                    <!--Render events in this section too-->
+                    <!--If no categories, offer option to add by typing-->
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="events" onclick="checkboxFunction(document.getElementById('events'), document.getElementById('eventbox'))">
+                        <label class="form-check-label" for="events">
+                            This project is part of one or more events
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden" id="eventbox">
+                <div class="col">
+                    <div id="eventboxinner">
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="event0" placeholder="Event">
+                            <!--datalist-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-custom" type="button" onclick="addEvent()">+ Add another </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="notes">Notes:</label>
+                        <textarea autocomplete="off" class="form-control" name="notes" rows="3" maxlength="1000" placeholder="This is a good place to note thread substitutions you've made, or errors in the chart you need to be aware of."></textarea>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-custom" type="submit">Add Update</button>
+        </form>
+        <script>
+            var eventcounter = 1;
+        var limit = 10;
+        function addEvent() {
+            if (eventcounter <= limit) {
+                var newdiv = document.createElement('div');
+                newdiv.classList.add("form-group");
+                newdiv.innerHTML = "<input class='form-control' type='text' name='event" + eventcounter + "' placeholder='Event'>";
+                document.getElementById("eventboxinner").appendChild(newdiv);
+                eventcounter++;
+             } else {
+                 alert("You may only add 10 events to a Project.")
+             }
+        }
+
+        var catcounter = 1;
+        function newCat() {
+            if (catcounter <= limit) {
+                var newdiv = document.createElement('div');
+                newdiv.classList.add("form-group");
+                newdiv.innerHTML = "<input class='form-control' type='text' name='newcat" + catcounter + "' placeholder='New Category'>";
+                document.getElementById("catbox").appendChild(newdiv);
+                catcounter++
+            } else {
+                alert("You may only add 10 new categories at a time. If you wish to add more, edit this Project later.")
+            }
+        }
+
+        var threadlimit = 25;
+        var threadcounter = 1;
+        function newThread() {
+            if (threadcounter <= threadlimit) {
+                var newdiv = document.createElement('div');
+                newdiv.classList.add("row");
+                newdiv.innerHTML =  "<div class='row'><div class='col'><div class='form-group'><input type='text' class='form-control' name='threaddyer" + threadcounter + "' placeholder='Dyer'></div></div><div class='col'><div class='form-group'><input type='text' class='form-control' name='flossnumber" + threadcounter + "' placeholder='Name/Number'></div></div><div class='col'><div class='form-group'><input type='text' class='form-control' name='threadtype" + threadcounter + "' placeholder='Type'></div></div></div>";
+                document.getElementById("handdyeinner").appendChild(newdiv);
+                threadcounter++
+            } else {
+                alert("You may only add 25 hand-dyed threads to a project. If you wish to add more, consider adding them to the 'Notes' section.")
+            }
+        }
+        </script>
+    
+    </div>
+
+{% endblock %}
+
+<!--Updates: timestamp, photo, notes, tags, add to event, status (Everything else must be changed via edit)-->

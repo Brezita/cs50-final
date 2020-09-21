@@ -1,0 +1,315 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    overflow: auto;
+}
+
+#menubar {
+    background-color: #92C9EE;
+    min-height: 54px;
+    width: 100%;
+    z-index: 500;
+}
+
+/* Style the links inside the navigation bar */
+#menubar a {
+    float: left;
+    color: #fff;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+#menubar a:hover {
+    background-color: #0E3D69;
+    color: #f2f2f2;
+}
+
+.page-header {
+    border-top: 10px;
+    font-style: italic;
+    font-family: "Brush Script MT", cursive;
+    font-size: 40px;
+}
+
+.menulinks {
+    width: 90%;
+    margin: auto;
+}
+
+#profile {
+    right: 5%;
+    position: absolute;
+}
+
+.dropdown-menu {
+    background-color: #92C9EE;
+    margin-top: 0;
+}
+
+/* Allows the menu to stick at the top when enabled by JS */
+.sticky {
+    position: fixed !important;
+    top: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.small-container{
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container {
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+
+.left-container {
+    margin-left: 10%;
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+.right-container {
+    max-width: 650px;
+    margin-bottom: 20px;
+}
+
+.display {
+    max-height: 300px;
+    max-width: 300px;
+}
+
+/* this should have a top margin and doesn't */
+#main {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    padding: 15px;
+    font-family: "Arial", sans-serif;
+    position: relative;
+}
+
+#main a {
+    color: #92C9EE;
+}
+
+.form-control:focus {
+    border-color: #92C9EE;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(146, 201, 238, 0.6);
+}
+
+.custom-file {
+    max-width: 500px;
+}
+
+.polaroid, .polaroid:active, .polaroid:hover, .polaroid:active {
+    padding: 0px;
+    border: 0;
+}
+
+#button-rig .btn-custom {
+    color: #fff;
+}
+
+.formbtn {
+    margin: 5px 5px 5px;
+}
+
+.btn-custom {
+    background-color: #92C9EE;
+    color: #fff;
+}
+
+.btn-custom:hover {
+    background-color: #0E3D69;
+    color: #f2f2f2;
+}
+
+header {
+    font-family: "Brush Script MT", cursive;
+    width: 80%;
+    margin: auto;
+}
+
+.gradient-text {
+    background-image: linear-gradient(#92C9EE, #0E3D69);
+    background-clip: text;
+    -webkit-background-clip: text;
+     -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+}
+
+#wrapper {
+    display: flex;
+    min-height: 68vh;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.flex-container {
+    width: inherit;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: inherit;
+    min-height: 40px;
+}
+
+.tag {
+    background: #92C9EE;
+    color: #fff;
+    padding: 5px;
+    margin: 5px 5px 5px 5px;
+    font-size: small;
+}
+
+/*Polaroid effect*/
+/*https://www.w3docs.com/snippets/css/how-to-create-polaroid-image-with-css.html*/
+figure {
+    background: #ffffff;
+    display: inline-block;
+    margin: 5px 5px 30px;
+    padding: 15px 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    -webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
+    -moz-box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
+    -webkit-transition: all .20s linear;
+    -moz-transition: all .20s linear;
+    transition: all .20s linear;
+    cursor: pointer;
+    position: relative;
+}
+
+figcaption {
+    color: #333;
+    font-size: 12px;
+    position: relative;
+    top: 15px;
+    font-family: "Courier New", monospace;
+}
+
+figure img {
+    display: block;
+    width: 250px;
+}
+
+figure:hover {
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    transform: scale(1.2);
+    -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, .7);
+    -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, .7);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .7);
+}
+
+blockquote {
+    border-left: 7px solid #92C9EE;
+    padding-left: 20px; 
+    font-size: large;
+    color: #696969;
+}
+
+header h1 {
+    font-size: 100px;
+    filter: drop-shadow(5px 5px 10px #7D8291);
+}
+
+#content {
+    height: 70%;
+    width: 77%;
+    float: left;
+    margin-top: 10px;
+    /*text-align: justify;*/
+}
+
+#sidebar {
+    padding: 10px;
+    background-color: #92C9EE;
+    top: 0;
+    right: 0;
+    position: absolute;
+    width: 250px;
+    height: 100%;
+}
+
+/*#floatmenu {*/
+/*    padding: 10px;*/
+/*    position: fixed;*/
+/*    color: #fff;*/
+/*}*/
+
+
+#floatmenu button {
+    background-color: #F6FFFF;
+    color: black;
+}
+
+#floatmenu button:hover {
+    background-color: #0E3D69;
+    color: #f2f2f2;
+}
+
+.empty {
+    text-align: center;
+    margin-top: 10%;
+}
+
+.text-box {
+    padding: 15px;
+    text-align: center;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+     background: #92C9EE;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+     background: #0E3D69;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+     background: #001A46;
+}
+
+footer {
+    width: inherit;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: small;
+    text-align: center;
+    color: #fff;
+    background: #92C9EE;
+}

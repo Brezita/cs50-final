@@ -1,0 +1,49 @@
+        # TODO - add image upload
+        # ('addimage', '') 0 --> current
+        # ('projectname', '') 1 -- project
+        # ('designer', '') 2 -- project
+        # ('whichmag', '') 3 -- project
+        # ('issue', '') 4 -- project
+        # ('start', '') 5 -- project
+        # ('finish', '') 6 -- project
+        # ('height', '') 7 -- project
+        # ('width', '') 8 -- project
+        # ('dyer', '') 9 -- fabric
+        # ('count', '') 10 -- fabric
+        # ('colour', '') 11 -- fabric
+        # ('type', '') 12 -- fabric
+        # ('threads', '') 13 -- thread
+        # ('threaddyer0', '') -- handdye
+        # ('flossnumber0', '') -- handdye
+        # ('threadtype0', '') -- handdye
+        # ('priority', 'none') -- project
+        # ('deadline', '') -- project
+        # ('notes', '') --> current
+        
+
+        Edit Form
+        - name
+        - designer
+        - magazine? (cb)
+        - which magazine
+        - which issue
+        - not started (cb)
+        - start date
+        - finished (cb)
+        - finish date
+        - height
+        - width
+        - kit? (cb)
+        - fab dyer
+        - fab count
+        - fab colour
+        - fab type
+        - overtwo? (cb)
+        - threads? (cb)
+        - threads
+        - handdye threads (cb)
+        - thread dyer
+        - thread name/no
+        - thread type
+        - project priority
+        - project deadline

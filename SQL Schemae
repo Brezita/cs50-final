@@ -1,0 +1,48 @@
+CREATE TABLE project (
+'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+'name' VARCHAR(40),
+'designer' VARCHAR(40),
+'magazine' VARCHAR(40),
+'issue' SMALLINT,
+'startdate' TEXT,
+'finishdate' TEXT,
+'height' SMALLINT,
+'width' SMALLINT,
+'size' TEXT,
+'status' VARCHAR(8),
+'priority' CHAR(1),
+'deadline' DATE
+);
+CREATE TABLE current (
+'project_id' INTEGER NOT NULL,
+'notes' VARCHAR(1000),
+'timestamp' DATETIME default current_timestamp,
+FOREIGN KEY (project_id) REFERENCES project(id)
+);
+CREATE TABLE tags (
+'project_id' INTEGER NOT NULL,
+'tag' VARCHAR(40),
+'event_tag' BOOL,
+FOREIGN KEY (project_id) REFERENCES project(id)
+);
+CREATE TABLE thread (
+'project_id' INTEGER NOT NULL,
+'thread_no' SMALLINT,
+FOREIGN KEY (project_id) REFERENCES project(id)
+);
+CREATE TABLE handdye (
+'project_id' INTEGER NOT NULL,
+'nameno' VARCHAR(25),
+'type' VARCHAR(25),
+'dyer' VARCHAR(40),
+FOREIGN KEY (project_id) REFERENCES project(id)
+);
+CREATE TABLE fabric (
+'project_id' INTEGER NOT NULL,
+'dyer' VARCHAR(25),
+'count' TINYINT,
+'colour' VARCHAR(25),
+'type'  VARCHAR(10),
+'overtwo' BOOLEAN,
+FOREIGN KEY (project_id) REFERENCES project(id)
+);

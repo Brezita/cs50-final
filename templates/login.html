@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block main %}
+    <div class="small-container" align="center">
+        <h2>Log In</h2>
+
+        <form action="/login" method="post">
+            <div class="col">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" name="password" placeholder="Password">
+                </div>
+                <button class ="btn btn-custom" type="submit">Login</button>
+            </div>
+        </form>
+        <p style="font-size:small"><a href="#">Forgotten your password?</a></p>
+    </div>
+
+<!--To Do:
+- Insert into application.py
+- Link to registration page
+- Add "forgot password?" link-->
+
+{% endblock %}
