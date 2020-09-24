@@ -14,12 +14,12 @@
 
         <div id="menubar">
             <div class="menulinks">
-                <!-- if session.user_id -->
+              {% if session.user_id %}
 
                 <a href="/">Home</a>
 
                 <div class="nav-item">
-                  <a class="nav-link" href="/add">Add New Project</a>
+                  <a class="nav-link" href="/add">Add Project</a>
                 </div>
 
                 <div class="nav-item">
@@ -44,21 +44,24 @@
                 </div>
 
                 <div class="nav-item">
-                  <a class="nav-link" href="/calculator">Size Calculator</a>
+                  <a class="nav-link" href="/calculator">Calculator</a>
                 </div>
 
                 <div class="nav-item">
-                  <a class="nav-link" href="/about">About StitchBook50</a>
+                  <a class="nav-link" href="/about">About</a>
                 </div>
 
-                <a class="nav-link" id="profile" href="/profile">Profile</a>
+                <div class="right-menu">
+                  <a class="nav-link" href="/profile">Profile: {{session["username"]}}</a>
+                  <a class="nav-link" href="/logout">Log Out</a>
+                </div>
 
-                <!-- else
+              {% else %}
 
                 <a href="/login">Login</a>
                 <a href="/register">Register</a>
 
-                endif-->
+              {% endif%}
 
             </div>
         </div>

@@ -6,18 +6,24 @@
     <div class="small-container" align="center">
         <h2>Log In</h2>
 
+        {% if redirect is true %}
+        <div class="alert alert-danger" role="alert">
+            Password does not match username, please try again
+        </div>
+        {% endif %}
+
         <form action="/login" method="post">
             <div class="col">
                 <div class="form-group">
-                    <input class="form-control" type="text" name="username" placeholder="Username">
+                    <input class="form-control" type="text" name="username" placeholder="Username" required>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="password" name="password" placeholder="Password">
+                    <input class="form-control" type="password" name="password" placeholder="Password" required>
                 </div>
                 <button class ="btn btn-custom" type="submit">Login</button>
             </div>
         </form>
-        <p style="font-size:small"><a href="#">Forgotten your password?</a></p>
+        <p style="font-size:small"><a href="/password">Forgotten your password?</a></p>
     </div>
 
 <!--To Do:

@@ -2,6 +2,99 @@
 
 {% block main %}
 
+    <div class="container">
+        <h4 class="page-header">Size Calculator</h4>
+        <form action="#">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="width">Width in Stitches:</label>
+                        <input class="form-control" type="number" id="width" min="1" placeholder="Width" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="height">Height in Stitches: </label>
+                        <input class="form-control" type="number" id="height" min="1" placeholder="Height" required>
+                    </div>
+                </div>
+            </div>            
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="fabcount">Fabric Count</label>
+                        <input class="form-control" type="number" id="fabcount" min="1" placeholder="Fabric Count" required>
+                    </div>          
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="metric">Inches or Centimetres:</label>
+                        <select class="form-control" id="metric" name="metric">
+                            <option value="inches">inches</option>
+                            <option value="cms">cms</option>
+                        </select>
+                    </div>                
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group" align="center">
+                        <input class="form-check-input" type="checkbox" value="" id="overtwo">
+                        <label class="form-check-label" for="overtwo">I am stitching over two fabric threads</label>
+                    </div>
+                </div>
+            </div>            
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group" align="right">
+                        <button class="btn btn-custom" type="button" onclick="calculate()">Calculate Size</button>
+                    </div>
+                </div>      
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <button class="btn btn-custom" type="reset">Reset</button>
+                    </div>
+                </div>                          
+            </div>
+            <div class="row">
+                <div class="col-sm-12" id="message">
+                    The size of your project will appear here!<br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12" style="margin-top:10px">
+                    Don't forget to add 3 inches on each side of your project for framing!<br>
+                    (e.g. a 5"x7" project becomes 11"x13")
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        function calculate() {
+            var height = document.getElementById('height').value;
+            var width = document.getElementById('width').value;
+            var fabric = document.getElementById('fabcount').value;
+
+            var metric = document.getElementById('metric');          
+
+            var message = document.getElementById('message');
+
+            if (height === "" || width === "" || fabric === "") {
+                message.innerHTML = 'Please fill out all fields in the form.'
+            } else {
+                if (document.getElementById('overtwo').checked) {
+                    var fabric = fabric / 2;
+                }
+
+                var newheight = height / fabric;
+                var newwidth = width / fabric;
+
+                message.innerHTML = 'This project is ' + newheight.toFixed(2) + ' ' + metric.value + ' tall and ' + newwidth.toFixed(2) + ' ' + metric.value + ' wide.';
+            }
+        }
+    </script>
+
 {% endblock %}
 
 <!--Create a stitch count calculator which will allow people to plug in a stitch count, a fabric count (allow inches or cm), and whether it's being stitched over 2,
