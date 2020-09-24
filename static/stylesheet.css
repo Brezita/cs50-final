@@ -43,7 +43,7 @@ body {
     margin: auto;
 }
 
-#profile {
+.right-menu {
     right: 5%;
     position: absolute;
 }

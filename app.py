@@ -1,8 +1,10 @@
 import os
+
 from cs50 import SQL
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_session import Session
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
 
@@ -23,19 +25,13 @@ Session(app)
 
 def allowed_file(filename):
     '''Check file extension against list of allowed file extensions'''
-    print("Checking if file extension allowed")
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def upload_image(file):
     '''Takes image from form and uploads it'''
-    print("Extension allowed, initiating file upload")
     if file and allowed_file(file.filename):
-        print("File allowed")
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        print('upload_image filename: ' + filename)
-        # return redirect(url_for('uploaded_file', filename=filename))
-        # Return filename to the main app
         return filename
 
 @app.route("/login", methods=["GET", "POST"])
@@ -44,30 +40,82 @@ def login():
     # Forget any user_id
     session.clear()
 
-    if request.method == "GET":
-        return render_template("login.html")
+    if request.method == "POST":
+        # Check username exists
+        rows = db.execute("SELECT * FROM users WHERE username = :username",
+                            username=request.form.get("username"))
+
+        # Check password matches database
+        if len(rows) != 1 or not check_password_hash(rows[0]["password"], request.form.get("password")):
+            return render_template("login.html", redirect=True)
+        
+        session["user_id"] = rows[0]["id"]
+
+        return redirect("/")
+
+    else:
+        return render_template("login.html", redirect=False)
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    # TO DO
-    return render_template("register.html")
+    if request.method == "POST":
+        username = request.form.get("username")
+        email = request.form.get("email")
+
+        rows = db.execute("SELECT * FROM users WHERE username = :username OR email = :email", username=username, email=email)
+        if len(rows) > 0:
+            return render_template("register.html", redirect=True)
+
+        password = request.form.get("password")
+
+        db.execute("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)", username=username, password=generate_password_hash(password), email=email)
+        user = db.execute("SELECT last_insert_rowid()")
+
+        session["user_id"] = user[0]["last_insert_rowid()"]
+        session["username"] = username
+        return redirect("/")
+
+    else:
+        return render_template("register.html", redirect=False)
+
+@app.route("/password", methods=["GET", "POST"])
+def password():
+    if request.method == "POST":
+        username = request.form.get("username")
+        email = request.form.get("email")
+
+        rows = db.execute("SELECT * FROM users WHERE username = :username AND email = :email", username=username, email=email) 
+
+        if len(rows) != 1:
+            return render_template("password.html", redirect=True)
+
+        password = request.form.get("password")
+
+        db.execute("UPDATE users SET password = :password WHERE username = :username AND email = :email", password=generate_password_hash(password), username=username, email=email)
+        return redirect("/")
+    else:
+        return render_template("password.html", redirect=False)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
 
 
 @app.route("/")
-# @login_required
+@login_required
 def index():
     projects = db.execute("SELECT project.id, project.name, current.image, current.timestamp FROM project \
         JOIN current ON project.id = current.project_id ORDER BY current.timestamp DESC LIMIT 10")
     # WHERE project_id IN (SELECT project_id FROM bridge WHERE user_id = :user_id)", user_id=
     # TO DO: edit this once profile section is in place
-    print(f"{projects}")
     projectno = len(projects)
     return render_template("index.html", projects=projects, projectno=projectno)
 
 
 @app.route("/add", methods=["GET", "POST"])
-# @login_required
+@login_required
 def add():
     if request.method == "GET":
         cats = db.execute("SELECT DISTINCT tag FROM tags")
@@ -75,7 +123,6 @@ def add():
         categories = len(cats)
         return render_template("add_project.html", categories=categories, cats=cats)
     else:
-        print("Initiating form entry")
         formdata = request.form.to_dict()
 
         # Check whether all the information is available to calculate the size, then do so
@@ -124,14 +171,8 @@ def add():
         if request.files['addimage'] is not None:
             file = request.files['addimage']
             if file.filename != '':
-                print("File found")
                 filename = upload_image(file)
-                print(f"Returned {filename}")
-        else:
-            print("No file included")
         
-
-        print(f"Inserting {filename}")
         db.execute("INSERT INTO current (project_id, image, notes) VALUES (:project_id, \
                 :image, :notes)", project_id=lastid, image=filename, notes=formdata['notes'])
 
@@ -205,7 +246,7 @@ def add():
 
 
 @app.route("/all")
-# @login_required
+@login_required
 def all():
     # TO DO - add userid
     projects = db.execute("SELECT project.id, project.name, project.designer, current.image FROM project JOIN \
@@ -215,9 +256,8 @@ def all():
 
 
 @app.route("/current")
-# @login_required
+@login_required
 def current():
-    print("Directing to current")
     # TO DO  - add userid
     projects = db.execute("SELECT project.id, project.name, project.designer, current.image FROM project JOIN current ON project.id = current.project_id WHERE status = 'Started'")
     projectno = len(projects)
@@ -225,6 +265,7 @@ def current():
 
 
 @app.route("/finished")
+@login_required
 def finished():
     # TO DO - add userid
     projects = db.execute("SELECT project.id, project.name, project.designer, current.image FROM project JOIN \
@@ -234,6 +275,7 @@ def finished():
 
 
 @app.route("/queued")
+@login_required
 def queued():
     # TO DO - add userid
     projects = db.execute("SELECT project.id, project.name, project.designer, current.image FROM project JOIN \
@@ -243,7 +285,7 @@ def queued():
 
 
 @app.route("/view", methods=["POST"])
-# @login_required
+@login_required
 def view(id=None):
     # TO DO - add userid once added
     if id == None:
@@ -260,15 +302,11 @@ def view(id=None):
     handdye = db.execute("SELECT * FROM handdye WHERE project_id = :id", id=id)
 
     tags = db.execute("SELECT tag FROM tags WHERE project_id = :id", id=id)
-    print(f"{tags}" )
-    print(f"{project}")
-    print(f"{thread}")
-    print(f"{handdye}")
     return render_template("view.html", project=project, thread=thread, handdye=handdye, tags=tags)
 
 # Route to the update page
 @app.route("/update", methods=["POST"])
-# @login_required
+@login_required
 def update():
     # TO DO: add user id aspect to SQL query
     id = request.form.get("id")
@@ -282,7 +320,7 @@ def update():
 
 # Actually update server then reroute back to the view page
 @app.route("/updatedb", methods=["POST"])
-# @login_required
+@login_required
 def updatedb():
     formdata = request.form.to_dict()
     id = formdata['id']
@@ -300,14 +338,8 @@ def updatedb():
     if request.files['addimage'] is not None:
         file = request.files['addimage']
         if file.filename != '':
-            print("File found")
             filename = upload_image(file)
-            print(f"Returned {filename}")
-    else:
-        print("No file included")
-    
 
-    print(f"Inserting {filename}")
     db.execute("INSERT INTO current (project_id, image, notes) VALUES (:project_id, \
             :image, :notes)", project_id=lastid, image=filename, notes=formdata['notes'])
 
@@ -341,7 +373,7 @@ def updatedb():
     return redirect("/view", id=id)
 
 @app.route("/delete", methods=["POST"])
-# @login_required
+@login_required
 def delete():
     id = request.form.get("id")
 
@@ -350,18 +382,19 @@ def delete():
     return redirect("/")
 
 @app.route("/calculator")
-# @login_required
+@login_required
 def calculator():
     return render_template("calculator.html")
 
 
 @app.route("/about")
+@login_required
 def about():
     # TO DO
     return render_template("about.html")
 
 
 @app.route("/profile")
-# @login_required
+@login_required
 def profile():
     return render_template("profile.html")
